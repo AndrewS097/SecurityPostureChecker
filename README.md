@@ -4,7 +4,7 @@ Security Posture Checker is a basic PowerShell tool that reviews common Windows 
 
 ## Overview
 
-This tool checks several areas of a Windows system and saves the results to a text file on the user's Desktop. It does not make any changes to the system. It only collects information and reports what it finds.
+This tool checks several areas of a Windows system and saves the results to a text file on the user's Desktop by default. It does not make any changes to the system. It only collects information and reports what it finds.
 
 The report includes:
 
@@ -13,13 +13,14 @@ The report includes:
 * Local administrator group members
 * Local password policy
 * Startup programs
-* Processes running from Downloads, Desktop, or Temp folders
+* Processes running from Downloads, Desktop, Temp, or AppData folders
+* Basic findings summary with PASS and REVIEW results
 
 ## Why This Tool Is Useful
 
 A basic security posture review helps identify settings or activity that should be reviewed. For example, the tool can show if the firewall is disabled, if Defender protection is off, if there are unexpected local administrators, or if programs are running from risky user-controlled folders.
 
-Folders like Downloads, Desktop, and Temp are not always dangerous, but they are common places where suspicious files may be launched from.
+Folders like Downloads, Desktop, Temp, and AppData are not always dangerous, but they are common places where suspicious files may be launched from.
 
 ## Features
 
@@ -29,6 +30,7 @@ Folders like Downloads, Desktop, and Temp are not always dangerous, but they are
 * No installation required
 * Does not modify system settings
 * Easy to test in a demo environment
+* Includes a basic findings summary
 
 ## Requirements
 
@@ -52,9 +54,15 @@ After the script finishes, open the report from the Desktop:
 notepad $env:USERPROFILE\Desktop\Security_Posture_Report.txt
 ```
 
+You can also choose a custom report name or location:
+
+```powershell
+powershell.exe -NoProfile -ExecutionPolicy Bypass -File .\SecurityPostureChecker.ps1 -Report .\Report1.txt
+```
+
 ## Report Location
 
-The report is saved to:
+By default, the report is saved to:
 
 ```text
 Desktop\Security_Posture_Report.txt
@@ -87,15 +95,27 @@ Displays the local password policy using the Windows `net accounts` command.
 
 Lists programs configured to run automatically when Windows starts.
 
-### 6. Processes Running from Downloads, Desktop, or Temp
+### 6. Processes Running from Downloads, Desktop, Temp, or AppData
 
 Checks for running processes that started from common user-controlled folders:
 
 * Downloads
 * Desktop
 * Temp
+* AppData
 
-These locations are worth reviewing because suspicious files are often launched from these folders.
+These locations are worth reviewing because suspicious files are often launched from user-writable folders.
+
+### 7. Findings Summary
+
+Adds a basic summary at the end of the report using PASS and REVIEW results.
+
+The summary checks for:
+
+* Disabled firewall profiles
+* Microsoft Defender real-time protection being disabled
+* More than two local administrator members
+* Processes running from Downloads, Desktop, Temp, or AppData
 
 ## Example Use Case
 
@@ -108,6 +128,7 @@ This tool can be used by students, beginner security analysts, or system adminis
 * It does not fix security issues automatically.
 * Some results may require Administrator permissions.
 * Some Defender checks may not work if Microsoft Defender is not installed or is managed by another security product.
+* PASS and REVIEW results are basic checks and should still be reviewed by the user.
 
 ## Disclaimer
 
